@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather Assistant</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+        }
+        .chat-box {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            min-height: 300px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .message {
+            margin: 15px 0;
+            padding: 10px 15px;
+            border-radius: 8px;
+        }
+        .user {
+            background-color: #007bff;
+            color: white;
+            text-align: right;
+        }
+        .agent {
+            background-color: #e9ecef;
+            color: #333;
+        }
+        .input-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .clear-btn {
+            background-color: #6c757d;
+        }
+        .clear-btn:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <h1>🌤️ Weather Assistant</h1>
+
+    <div class="chat-box">
+        {% if messages %}
+            {% for msg in messages %}
+                <div class="message {{ msg.sender }}">
+                    {{ msg.text }}
+                </div>
+            {% endfor %}
+        {% else %}
+            <p style="color: #999; text-align: center;">Ask me about the weather!</p>
+        {% endif %}
+    </div>
+
+    <form method="POST" action="/send" class="input-form" id="chatForm">
+        <input type="text" name="message" placeholder="Ask about the weather..." required autofocus>
+        <input type="hidden" name="latitude" id="latitude">
+        <input type="hidden" name="longitude" id="longitude">
+        <button type="submit">Send</button>
+    </form>
+
+    <a href="/clear">
+        <button type="button" class="clear-btn">New Conversation</button>
+    </a>
+
+    <script>
+        // Get user's location once when page loads
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                document.getElementById('latitude').value = position.coords.latitude;
+                document.getElementById('longitude').value = position.coords.longitude;
+            });
+        }
+    </script>
+</body>
+</html>
